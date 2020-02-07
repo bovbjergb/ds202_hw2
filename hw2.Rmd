@@ -1,0 +1,83 @@
+---
+title: "hw2"
+author: Britt Bovbjerg; GitHub = bovbjergb
+date: Due date = 2/7/20
+output: html_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This homework is about syntax and basic plotting functions in R, and is **due by the end of Feb 7**. 
+
+You can use the RMarkDown file with these homework instructions as a template for your work. 
+Make sure to replace "Your Name" and "your_github_username" in the YAML with your name and Github username.
+
+**Submission instructions**: Create a folder named `ds202_hw2`, and name the RMarkDown file including your solutions `hw2.Rmd` under this folder. For submission, create a GitHub repository named `ds202_hw2` under your account, and push both `hw2.Rmd` and the knitted `hw2.html` to GitHub before the deadline. I will assume you use the same GitHub username as for your HW1 submission. The latest version of your homework appearing on GitHub before the deadline is graded. *It is crucial to follow the exact folder structure and file names*, so that your homework can be reproduced and graded by an automated script. Some questions will require the following answer format.
+
+
+## R commands
+1. Today's temperature has a high of 24 and a low of 15 degree fahrenheit.  Find the corresponding degress in celsius and storage it in a (single) vector named `cel`. Print the variable.
+```{r}
+pre <- c(24,15)
+cel <- (pre-32)/1.8
+cel
+```
+2. Create a vector of length 200. The odd entries should be 3 and even entries should be 1. Storage the created in a variable named `vec200` and print.
+```{r}
+vec200 <-rep(c(3,1), times = 100)
+vec200
+```
+3. How many perfect squares are there between 1 and 2001? Storage the answer in a  variable named `numPerfect` and print. You may want to look at `?round`.
+```{r}
+numPerfect <- floor(sqrt(2001))
+numPerfect
+```
+
+## Cars and mileage
+For this part we will use the `mpg` data set, you can access the data by first installing (using `install.packages('ggplot2')`) and then loading the package `ggplot2` (using `library(ggplot2)`) into your R session. The `mpg` data includes information about fuel economy of popular car models
+for the years 1999 and 2008 as collected by the US Environmental Protection Agency. An answer should include a short paragraph of text for the explanation to a (human) reader, together with appropriate R code, outputs, and graphs.
+
+Most exercises are from the ggplot2 book section 2.2.1. You might find it helpful for working on the homework to read through this section. *However, all questions can be solved by using just the basic R graphics functions.*
+
+1. What are the 3 most fuel-efficient models in terms of highway mileage? Storage the data frame (with 3 rows) containing all information of these three cars in a variable named `top3` and print.
+```{r}
+library(ggplot2)
+head(mpg[order(mpg$hwy, decreasing = TRUE),], 3)
+```
+The 1999 volkswagen Jetta and the 1999 volkswagen had the highest highway mileage at 44 miles per gallon, followed new beetle manual and the 1999 volkswagen new beetle autumatic transmitionat 41 miles per gallon. 
+
+2. How many different compact models are included in this dataset? Storage the answer in  a variable named `numCompact` and print.
+```{r}
+compacts <- mpg[which(mpg$class == 'compact'),]
+numCompact <- nrow(compacts)
+numCompact
+```
+There are 47 different models of compact cars in the mpg dataset. 
+
+3. Create a scatterplot of `hwy` and `cty` and describe the relationship. Why are there so few points visible? Explain your findings.
+```{r}
+plot(mpg$hwy,mpg$cty, main="Scatterplot of Highway Milage and City Milage",xlab="Highway Milage", ylab='City Milage')
+```
+The scatter plot between highway milage and city milage have a strong positive correlation between city milage and highway milage. The reason that it seems there are so few visible points is because the overlap on the graph. 
+
+
+4. Are cars in 2008 more fuel efficient than cars in 1999? Use graphs *and* summary statistics to answer this question. Explain your findings.
+```{r}
+ cars2008 <- mpg[which(mpg$year == '2008'),]
+ cars1999 <- mpg[which(mpg$year == '1999'),]
+ summary(cars1999)
+ summary(cars2008)
+ hist(cars2008$hwy, col=rgb(1,0,0,0.5),xlim=c(0,50), ylim=c(0,80), main="Histogram of Highway Fuel Effciency in 2008 and 1999", xlab="highway fuel efficiency") 
+hist(cars1999$hwy, col=rgb(0,0,1,0.5), add=T)
+legend("topright", c("2008", "1999"), cex=0.75, fill=c(rgb(1,0,0,0.5), rgb(0,0,1,0.5)))
+
+ hist(cars2008$cty, col=rgb(1,0,0,0.5),xlim=c(0,50), ylim=c(0,80), main="Histogram of City Fuel Effciency in 2008 and 1999", xlab="highway fuel efficiency") 
+hist(cars1999$cty, col=rgb(0,0,1,0.5), add=T) 
+legend("topright", c("2008", "1999"), cex=0.75, fill=c(rgb(1,0,0,0.5), rgb(0,0,1,0.5)))
+
+```
+The median value of highway fuel efficiency for 1999 cars was 25 miles/gallon whilefor 2008 cars it was 24 miles/gallon. The median value of city fuel efficency for 1999 cars was 17 miles/gallon and for 2008 cars was also 17 miles/gallon.
+
+Looking at both the data and the two histograms it looks like cars from 1999 were more fuel efficient than those from 2008. We can tell this because the medians for both kinds of fuel efficiency in 1999 are higher than the medians for cars in 2008. The histograms also show that the distributions for the fuel effiencies in 1999 are farther to the right for both kinds of fuel efficiencies in 2008. 
+
